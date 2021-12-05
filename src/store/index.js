@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import api from '@/api';
+import mockData from '@/mocks/getPayments';
 
 Vue.use(Vuex);
 
@@ -32,10 +33,17 @@ export default new Vuex.Store({
       commit('setState', { isLoading: true });
 
       try {
-        const { data } = await api.getPayments(params);
+        let data;
+        const isProduction = process.env.NODE_ENV === 'production';
 
-        if (Array.isArray(data)) {
-          commit('setState', { data });
+        if (isProduction) {
+          data = await api.getPayments(params);
+        } else {
+          data = await mockData(params);
+        }
+
+        if (Array.isArray(data.data)) {
+          commit('setState', data);
         }
       } catch (e) {
         // eslint-disable-next-line no-alert
