@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import dataFormattingMixin from '../mixins/dataFormattingMixin.vue';
+import dataFormattingMixin from '@/mixins/dataFormattingMixin.vue';
 
 export default {
 
