@@ -17,7 +17,7 @@
         </div>
         <div class="cell">
           <div class="label"><strong>Date</strong></div>
-          <span>{{ item.date }}</span>
+          <span>{{ formatDate(item.date) }}</span>
         </div>
         <div class="cell">
           <div class="label"><strong>Name</strong></div>
@@ -25,7 +25,7 @@
         </div>
         <div class="cell">
           <div class="label"><strong>Money</strong></div>
-          <span>{{ item.money }}</span>
+          <span>{{ formatMoney(item.money) }}</span>
         </div>
       </div>
     </div>
@@ -40,9 +40,13 @@
 </template>
 
 <script>
+import dataFormattingMixin from '../mixins/dataFormattingMixin.vue';
+
 export default {
 
   name: 'DataTable',
+
+  mixins: [dataFormattingMixin],
 
   props: {
     rows: {
