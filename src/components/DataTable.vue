@@ -4,17 +4,29 @@
       <ui-money v-model="moneyFilter" />
     </div>
 
-    <div class="data-table__table" :style="{ gridTemplateColumns: getColumnsWidth }">
+    <div class="data-table__table _header" :style="{ gridTemplateColumns: getColumnsWidth }">
       <div class="cell" v-for="item in columns" :key="item.prop">
         <strong>{{ item.label }}</strong>
       </div>
     </div>
     <div v-if="rows.length">
       <div class="data-table__table _body" :style="{ gridTemplateColumns: getColumnsWidth }" v-for="item in rows" :key="item.id">
-        <div class="cell">{{ item.id }}</div>
-        <div class="cell">{{ item.date }}</div>
-        <div class="cell">{{ item.name }}</div>
-        <div class="cell">{{ item.money }}</div>
+        <div class="cell">
+          <div class="label"><strong>ID</strong></div>
+          <span>{{ item.id }}</span>
+        </div>
+        <div class="cell">
+          <div class="label"><strong>Date</strong></div>
+          <span>{{ item.date }}</span>
+        </div>
+        <div class="cell">
+          <div class="label"><strong>Name</strong></div>
+          <span>{{ item.name }}</span>
+        </div>
+        <div class="cell">
+          <div class="label"><strong>Money</strong></div>
+          <span>{{ item.money }}</span>
+        </div>
       </div>
     </div>
 
@@ -85,4 +97,30 @@ export default {
   border: 1px solid #444
   &:not(:first-child)
     border-left: none
+
+.label
+  display: none
+
+@media (max-width: 768px)
+  .data-table__filter
+    margin-bottom: 20px
+
+  .data-table__table
+    &._header
+      display: none
+    &._body
+      display: flex
+      flex-direction: column
+      margin-bottom: 20px
+      border: 1px solid #444
+      .cell
+        text-align: left
+        border: none
+
+  .cell
+    padding: 10px 20px
+
+  .label
+    display: block
+
 </style>
