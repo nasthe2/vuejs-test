@@ -45,10 +45,8 @@ export default {
 
       if (onlyNumbersParts.length === 1) {
         this.valueInput = `${onlyNumbersParts[0]}`;
-      } else if (onlyNumbersParts[0] && !onlyNumbersParts[1]) {
-        this.valueInput = `${onlyNumbersParts[0]}.`;
-      } else if (onlyNumbersParts[0] && onlyNumbersParts[1]) {
-        this.valueInput = `${onlyNumbersParts[0]}.${onlyNumbersParts[1].substr(0, 2)}`;
+      } else if (onlyNumbersParts[0]) {
+        this.valueInput = `${onlyNumbersParts[0]}.${onlyNumbersParts[1] ? onlyNumbersParts[1].substr(0, 2) : ''}`;
       } else if (!onlyNumbersParts[0]?.length && onlyNumbersParts[1]?.length) {
         this.valueInput = `${onlyNumbersParts[1]}`;
       }
