@@ -29,21 +29,29 @@ export default new Vuex.Store({
   },
 
   actions: {
-    async load({ commit }, params = {}) {
+    async load({ commit, state }, params = {}) {
       commit('setState', { isLoading: true });
 
       try {
         let data;
         const isProduction = process.env.NODE_ENV === 'production';
+        const retrievedMoneyData = localStorage.getItem('moneyData');
+        const cachedData = retrievedMoneyData ? JSON.parse(retrievedMoneyData) : null;
 
-        if (isProduction) {
+        if (isProduction && !state.isCached) {
           data = await api.getPayments(params);
-        } else {
+        } else if (!state.isCached) {
           data = await mockData(params);
+        } else {
+          data = cachedData;
         }
 
         if (Array.isArray(data.data)) {
-          commit('setState', data);
+          commit('setState', { data: data.data });
+        }
+        if (!state.isCached) {
+          localStorage.setItem('moneyData', JSON.stringify({ data }));
+          commit('setState', { isCached: true });
         }
       } catch (e) {
         // eslint-disable-next-line no-alert
@@ -51,6 +59,13 @@ export default new Vuex.Store({
       } finally {
         commit('setState', { isLoading: false });
       }
+    },
+
+    async clearCache({ commit, dispatch }, params = {}) {
+      localStorage.removeItem('moneyData');
+      commit('setState', { isCached: false });
+
+      await dispatch('load');
     },
   },
 });

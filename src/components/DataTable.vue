@@ -120,6 +120,10 @@ export default {
 .label
   display: none
 
+.data-table__paginator
+  margin-top: 20px
+  padding-bottom: 20px
+
 @media (max-width: 768px)
   .data-table__filter
     margin-bottom: 20px
