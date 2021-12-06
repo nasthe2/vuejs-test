@@ -10,7 +10,7 @@
       </div>
     </div>
     <div v-if="rows.length">
-      <div class="data-table__table _body" :style="{ gridTemplateColumns: getColumnsWidth }" v-for="item in getFilteredRows()" :key="item.id">
+      <div class="data-table__table _body" :style="{ gridTemplateColumns: getColumnsWidth }" v-for="item in getPageRows()" :key="item.id">
         <div class="cell">
           <div class="label"><strong>ID</strong></div>
           <span>{{ item.id }}</span>
@@ -67,7 +67,7 @@ export default {
 
   computed: {
     pageCount() {
-      return Math.ceil(this.rows.length / this.pageSize);
+      return Math.ceil(this.getFilteredRows().length / this.pageSize);
     },
 
     getColumnsWidth() {
@@ -78,8 +78,26 @@ export default {
   },
 
   methods: {
-    isMoneyFilterValid(value) {
-      return (typeof value === 'number') && !Number.isNaN(value);
+    getPageRows() {
+      const pagesIndeces = [];
+      const subArrayIndices = [];
+      let indicesCounter = 0;
+
+      while (indicesCounter < this.getFilteredRows().length) {
+        subArrayIndices.push(indicesCounter);
+        indicesCounter += this.pageSize;
+      }
+
+      subArrayIndices.forEach((item) => {
+        const isLastSubArray = item + this.pageSize >= this.getFilteredRows().length;
+        if (!isLastSubArray) {
+          pagesIndeces.push(this.getFilteredRows().slice(item, this.pageSize));
+        } else {
+          pagesIndeces.push(this.getFilteredRows().slice(item));
+        }
+      });
+
+      return pagesIndeces[this.page - 1];
     },
 
     getFilteredRows() {
@@ -89,6 +107,10 @@ export default {
     onMoneyFilterUpdate(value) {
       this.moneyFilter = this.isMoneyFilterValid(value) ? value : 0;
       this.getFilteredRows();
+    },
+
+    isMoneyFilterValid(value) {
+      return (typeof value === 'number') && !Number.isNaN(value);
     },
   },
 };
