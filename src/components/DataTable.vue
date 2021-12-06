@@ -1,7 +1,7 @@
 <template>
   <div class="data-table">
     <div class="data-table__filter">
-      <ui-money v-model="moneyFilter" />
+      <ui-money v-model="moneyFilter" @input="onMoneyFilterUpdate" />
     </div>
 
     <div class="data-table__table _header" :style="{ gridTemplateColumns: getColumnsWidth }">
@@ -10,7 +10,7 @@
       </div>
     </div>
     <div v-if="rows.length">
-      <div class="data-table__table _body" :style="{ gridTemplateColumns: getColumnsWidth }" v-for="item in rows" :key="item.id">
+      <div class="data-table__table _body" :style="{ gridTemplateColumns: getColumnsWidth }" v-for="item in getFilteredRows()" :key="item.id">
         <div class="cell">
           <div class="label"><strong>ID</strong></div>
           <span>{{ item.id }}</span>
@@ -74,6 +74,21 @@ export default {
       return this.columns.reduce((acc, item) => {
         return acc + item.width;
       }, '');
+    },
+  },
+
+  methods: {
+    isMoneyFilterValid(value) {
+      return (typeof value === 'number') && !Number.isNaN(value);
+    },
+
+    getFilteredRows() {
+      return this.rows.filter((item) => item.money >= this.moneyFilter);
+    },
+
+    onMoneyFilterUpdate(value) {
+      this.moneyFilter = this.isMoneyFilterValid(value) ? value : 0;
+      this.getFilteredRows();
     },
   },
 };
